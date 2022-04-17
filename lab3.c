@@ -38,30 +38,25 @@ void compute(u_int16_t** arr, int kern[3][3]){
     u_int16_t tmp_sum[9];
     u_int16_t dato, accum;
     int i = 0, j = 0, k = 0, l = 0;
-    FILE *archivo;
-    archivo = fopen("log.txt", "a");
-    while(i < XDIM){
-        while(j < YDIM){
-            //fprintf(archivo, "processing: %d - %d \n", i, j);
-            if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1){
-                for(k = 0; k < 3; k++)
-                    for(l = 0; l < 3; l++){
-                        int x = i + (l-1);
-                        int y = j + (k-1);
-                        dato = arr[x][y];
-                        tmp_sum[l*3+k] = 2*(2*kern[l][k]*dato)*0.001 + 1;
-                    }
+    //FILE *archivo;
+    //archivo = fopen("log.txt", "a");
+    arr[0][0] = 0;
+    int num = 2*2/1000;
 
-                accum = 0;
-                for(k = 0; k < 3; k++)
-                    for(l = 0; l < 3; l++)
-                        accum = accum + tmp_sum[k*3+l];
-  
-            }
-            arr[i][j] = accum;
-            j++;
-        }
-    i++;   
+    for(i = 1 ; i < XDIM-1 ; i++)
+        for(j = 1 ; j < YDIM-1 ; j++){
+            //fprintf(archivo, "processing: %d - %d \n", i, j);
+            accum = 0;
+            for(k = 0; k < 3; k++)
+                for(l = 0; l < 3; l++){
+                    int x = i + (l-1);
+                    int y = j + (k-1);
+                    dato = arr[x][y];
+                    tmp_sum[l*3+k] = kern[l][k]*dato*num + 1;
+                    accum = accum + tmp_sum[k*3+l];
+                    arr[i][j] = accum;
+                }    
+        }    
 }
 
 
