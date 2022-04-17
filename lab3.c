@@ -27,8 +27,6 @@ u_int16_t **alloc_matrix(void) /* Allocate the array */
 
 void fill(u_int16_t** arr) {
     int i, j;
-    time_t t1; 
-    srand(time(NULL));
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             arr[i][j] = (u_int16_t)(rand() % 100);
@@ -59,7 +57,6 @@ void compute(u_int16_t** arr, int kern[3][3]){
         }    
 }
 
-
 void print(u_int16_t** arr) {
     int i, j;
     FILE *archivo;
@@ -71,7 +68,7 @@ void print(u_int16_t** arr) {
 
 int main(void)
 {
-    int i = 0;
+    srand(time(NULL));
     u_int16_t **arr;
     int kern[3][3] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 
