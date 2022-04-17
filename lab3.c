@@ -12,21 +12,21 @@ int YDIM = 10000;
 u_int16_t **alloc_matrix(void) /* Allocate the array */
 {
     /* Check if allocation succeeded. (check for NULL pointer) */
-    int i, j, k; 
-    u_int16_t **array;
-    array = malloc(XDIM*sizeof(u_int16_t *));
+    int i; //j, k; 
+    u_int16_t **array = calloc(XDIM*sizeof(u_int16_t *), sizeof(u_int16_t));
+
     for(i = 0 ; i < XDIM ; i++)
-        array[i] = malloc(YDIM*sizeof(u_int16_t));
-  
-    for(j=0; j<XDIM; j++)
+        array[i] = calloc(YDIM*sizeof(u_int16_t),  sizeof(u_int16_t));
+ 
+    /*for(j=0; j<XDIM; j++)
         for(k=0; k<YDIM; k++)
-            memset(&array[k][j], j, sizeof(u_int16_t));
+            memset(&array[k][j], j, sizeof(u_int16_t));*/
     return array;
 }
 
-
 void fill(u_int16_t** arr) {
     int i, j;
+    srand(time(NULL));
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             arr[i][j] = (u_int16_t)(rand() % 100);
@@ -35,14 +35,14 @@ void fill(u_int16_t** arr) {
 void compute(u_int16_t** arr, int kern[3][3]){
     u_int16_t tmp_sum[9];
     u_int16_t dato, accum;
-    int i = 0, j = 0, k = 0, l = 0;
+    int i = 1, j = 1, k = 0, l = 0;
     //FILE *archivo;
     //archivo = fopen("log.txt", "a");
     arr[0][0] = 0;
-    int num = 2*2/1000;
+    int num = 0.004;
 
-    for(i = 1 ; i < XDIM-1 ; i++)
-        for(j = 1 ; j < YDIM-1 ; j++){
+    while(i < XDIM-1){
+        while(j < YDIM-1){
             //fprintf(archivo, "processing: %d - %d \n", i, j);
             accum = 0;
             for(k = 0; k < 3; k++)
@@ -53,14 +53,15 @@ void compute(u_int16_t** arr, int kern[3][3]){
                     tmp_sum[l*3+k] = kern[l][k]*dato*num + 1;
                     accum = accum + tmp_sum[k*3+l];
                     arr[i][j] = accum;
-                }    
-        }    
+                }  
+            j++;  
+        }
+        i++;
+    }    
 }
 
-void print(u_int16_t** arr) {
+void print(u_int16_t** arr, FILE* archivo) {
     int i, j;
-    FILE *archivo;
-    archivo = fopen("log.txt", "a");
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             fprintf(archivo, "array[%d][%d] = %f\n", i, j, arr[i][j]);
@@ -68,14 +69,15 @@ void print(u_int16_t** arr) {
 
 int main(void)
 {
-    srand(time(NULL));
     u_int16_t **arr;
+    FILE *archivo;
+    archivo = fopen("log.txt", "a");
     int kern[3][3] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 
     arr = alloc_matrix();
     fill(arr);
     compute(arr, kern);
-    print(arr);
+    print(arr, archivo);
 
     return 0;
 }
