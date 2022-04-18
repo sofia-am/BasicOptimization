@@ -26,9 +26,8 @@ double **alloc_matrix(void) /* Allocate the array */
 
 
 void fill(double** arr) {
-    int i, j;
-    time_t t1; 
-    srand ( (unsigned) time (&t1));
+    int i, j; 
+    srand(time(NULL));
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             arr[i][j] = (double)(rand() % 100);
@@ -38,20 +37,20 @@ void compute(double** arr, int kern[3][3]){
     double tmp_sum[9];
     double dato, accum;
     int i = 0, j, k, l;
+    int num = 0.002;
     while(i < XDIM){
         j = 0;
         while(j < YDIM){
             //printf("processing: %d - %d \n", i, j);
             if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1){
-                
                 for(k = 0; k < 3; k++)
                     for(l = 0; l < 3; l++){
                         int x = i + (l-1);
                         int y = j + (k-1);
-                        dato = arr[x][j];
-                        tmp_sum[l*3+k] = 2*(2*kern[l][k]*dato)/1000 + 1;
+                        dato = arr[x][y];
+                        tmp_sum[l*3+k] = (2*kern[l][k]*dato)*num + 1;
                     }
-                
+
                 accum = 0;
                 for(k = 0; k < 3; k++)
                     for(l = 0; l < 3; l++)
@@ -78,7 +77,6 @@ void print(double** arr) {
 
 int main(void)
 {
-    int i = 0;
     double **arr;
     int kern[3][3] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 
