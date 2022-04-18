@@ -1,42 +1,68 @@
-Laboratorio III  Sistemas Operativos 2 
-### Ingeniería en Computación - FCEFyN - UNC
-# Optimizaciones de código
+# Laboratorio III: Optimización
+### Estudiante: Amallo, Sofía.
 
-## Introducción
-El avance del hardare por sobre el sofware ha generado un gap que continúa en crecimiento. Esto ha generado que los desarrolladores de software en algunas situaciones pierdan de vista el hardware objetivo y generen sofware poco eficiente.
 
-## Objetivo
-El objetivo del presente laboratorio es que los Estudiantes aprendan algunas técnicas de optimización de código, con el objetivo de que los trabajos tengan mejor performance y consuman menores recorsos.
+Se ejecutó el programa sin modificaciones, compilando el programa con los flags: 
+`-pg -no-pie -fno-builtin` donde:
+- `-pg` le indica al compilador que inserte el código del que va a hacer uso la herramienta gprof para hacer el perfilado.
+- `-no-pie` le indica al compilador que no ingrese código "position independent" porque eso modifica el proceso de creación de gprof
+- `-fno-builtin` le dice al compilador que no optimice el código reemplazando algunas de nuestras funciones por funciones integradas o con funciones in-line
 
-## Desarrollo
-### Problema a resolver
-Dado el archibo lab3.c en el presente repo, se pide que el estudiante lo analice, estudie y le realice toda tardea de optimización y refactorización que considere para que el software sea mas óptimo en consumo de recursos.
+En resumen, le indicamos al compilador que no realice optimizaciones sobre nuestro código.
+### 1era Iteración:
+Los resultados obtenidos fueron los siguientes:
+```
+   %      cumulative   self            self     total           
+  time     seconds   seconds  calls   s/call   s/call  name    
+ 86.63      19.21     19.21      1    19.21    19.21   compute
+ 12.21      21.91      2.71      1     2.71     2.71   print
+  1.27      22.20      0.28      1     0.28     0.28   fill
+  0.54      22.32      0.12      1     0.12     0.12   alloc_matrix
+```
 
-Se le debe medir y documentar las optimizaciones realizadas utilizando alguna herramienta de profiling y usando como base el software tal ocmo esta presentado.
+![](2022-04-17-17-01-49.png#center)
 
-Extra: Debe diseñar y desarrollar un unit test que valide el software (NO usando un framework, sólo un script).
+- total time %:  porcentaje de tiempo de ejecución que pasó en esta funcion y todos sus hijos.
+- self time %: es el porcentaje de tiempo de ejecución que transcurrió en esta funcion solamente
+- total calls: el total de veces que esta función fue llamada (incluyendo llamadas recursivas)
 
-### Restricciones
-- Se puede utilizar tanto GCC u otro compilador
-- La compilación debe realizarse sin [optimizaciones de compilación (-O0)](https://gcc.gnu.org/onlinedocs/gcc/Optimize-Options.html)
-- No se debe limitar a las técnicas presentadas en clase.
+### 2da Iteración:
 
-### Criterios de Corrección
-- Se debe compilar el código con los flags de compilación: 
-     -Wall -Pedantic -Werror -Wextra -Wconversion -std=gnu11
-- La correcta gestion de memoria.
-- Dividir el código en módulos de manera juiciosa.
-- Estilo de código.
-- Manejo de errores
-- El código no debe contener errores, ni warnings.
-- El código no debe contener errores de cppcheck.
+Se reemplazaron los print por fprint, para almacenarlos en una archivo de texto y evitar la impresión por pantalla.
 
-## Entrega
-La entrega se hace a travéz del repositorio de GitHub y se deberá demostrar la realizacion del mismo mediante un correcto uso. El repositorio deberá proveer los archivos fuente y cualquier otro archivo asociados a la compilación, archivos  de  proyecto  ”Makefile”  y  el  código correctamente documentado. No debe contener ningún archivo asociado a proyectos de un IDE y se debe asumir que el proyecto podrá ser compilado y corrido por una `tty` en una distribución de Linux con las herramientas típicas de desarrollo. También se deberá entregar un informe en formato _Markdown_ documentando cada cambio que se le realiza al código, que efecto produce sobre el mismo y porqué?
-También se deberá investigar acerca de qué utilidades de profiling gratuitas existen y que brinda cada una (un capítulo del informe), optando por una para realizar las mediciones de tiempo de ejecución de la aplicación diseñada.
+Resultados: 
+```
+   %    cumulative   self            self     total           
+  time   seconds   seconds  calls   s/call   s/call  name    
+ 91.33     12.84    12.84      1    12.84    12.84   compute
+  5.73     13.65     0.81      1     0.81     0.81   print
+  2.51     14.00     0.35      1     0.35     0.35   fill
+  1.07     14.15     0.15      1     0.15     0.15   alloc_matrix
+```
 
-El informe debe contener gráficos y análisis de comparación entre la ejecución procedural y la distribuida. El informe además debe contener el diseño de la solución y la comparativa de profilers.
+Reducción: **32,6%**
 
-## Evaluación
-El presente trabajo práctico es individual y deberá entregarse antes de las 23:50ART del día 21 de Abril de 2022 dejando asentado en el LEV con el archivo de ifnorme. 
+### 3ra Iteración:
+Eliminé la línea `if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1)` cambiándole los argumentos a los for, para que i empiece de 1 y vaya hasta XDIM-1, lo mismo para j.
+
+```
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 84.76      8.79     8.79        1     8.79     8.79  compute
+  7.87      9.61     0.82        1     0.82     0.82  print
+  6.90     10.32     0.72        1     0.72     0.72  fill
+  0.00     10.32     0.00        1     0.00     0.00  alloc_matrix
+```
+
+Se reemplazaron los `for` por ciclos `while`, y se eliminó el siguiente fragmento:
+```c
+accum = 0;
+for(k = 0; k < 3; k++)
+    for(l = 0; l < 3; l++)
+        accum = accum + tmp_sum[k*3+l]; 
+```
+ya que se podía incluir dentro de otro ciclo que recorría el arreglo `tmp_sum`.
+
+## Con la segunda optimización se logró una reducción del tiempo de ejecución de un: **53,76%** 
 
