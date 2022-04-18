@@ -1,6 +1,12 @@
 # Laboratorio III: Optimización
-### Estudiante: Amallo, Sofía.
+### Estudiante:   Amallo, Sofía - 41279731
 
+En el script **exe.sh** se encuentran los comandos para compilar, ejecutar y escribir en una archivo los resultados de gprof.
+```
+$ gcc -Wall -pedantic -Werror -Wextra -Wconversion -std=gnu11 -pg -no-pie -fno-builtin lab3.c -o lab3
+$ ./lab3
+$ gprof lab3 gmon.out > gprof_analysis.txt
+```
 
 Se ejecutó el programa sin modificaciones, compilando el programa con los flags: 
 `-pg -no-pie -fno-builtin` donde:
@@ -49,10 +55,10 @@ Eliminé la línea `if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1)` cambiándole
 Each sample counts as 0.01 seconds.
   %   cumulative   self              self     total           
  time   seconds   seconds    calls   s/call   s/call  name    
- 84.76      8.79     8.79        1     8.79     8.79  compute
-  7.87      9.61     0.82        1     0.82     0.82  print
-  6.90     10.32     0.72        1     0.72     0.72  fill
-  0.00     10.32     0.00        1     0.00     0.00  alloc_matrix
+ 86.75      7.90     7.90        1     7.90     7.90  compute
+  8.85      8.71     0.81        1     0.81     0.81  fill
+  4.31      9.10     0.39        1     0.39     0.39  print
+  0.00      9.10     0.00        1     0.00     0.00  alloc_matrix
 ```
 
 Se reemplazaron los `for` por ciclos `while`, y se eliminó el siguiente fragmento:
@@ -64,5 +70,8 @@ for(k = 0; k < 3; k++)
 ```
 ya que se podía incluir dentro de otro ciclo que recorría el arreglo `tmp_sum`.
 
-## Con la segunda optimización se logró una reducción del tiempo de ejecución de un: **53,76%** 
+## Con la segunda optimización se logró una reducción del tiempo de ejecución de un: **59,23%** 
+
+
+Cabe destacar que hubieron más de 3 iteraciones, pero con pocos cambios significativos. 
 
