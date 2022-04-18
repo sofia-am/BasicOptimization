@@ -24,6 +24,7 @@ double **alloc_matrix(void) /* Allocate the array */
     return array;
 }
 
+
 void fill(double** arr) {
     int i, j;
     time_t t1; 
@@ -36,39 +37,48 @@ void fill(double** arr) {
 void compute(double** arr, int kern[3][3]){
     double tmp_sum[9];
     double dato, accum;
-    int i, j, k, l;
+    int i = 0, j, k, l;
     while(i < XDIM){
+        j = 0;
         while(j < YDIM){
             //printf("processing: %d - %d \n", i, j);
             if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1){
-                accum = 0;
+                
                 for(k = 0; k < 3; k++)
                     for(l = 0; l < 3; l++){
                         int x = i + (l-1);
                         int y = j + (k-1);
-                        dato = arr[x][y];
+                        dato = arr[x][j];
                         tmp_sum[l*3+k] = 2*(2*kern[l][k]*dato)/1000 + 1;
+                    }
+                
+                accum = 0;
+                for(k = 0; k < 3; k++)
+                    for(l = 0; l < 3; l++)
                         accum = accum + tmp_sum[k*3+l];
-                    }  
+  
             }
             arr[i][j] = accum;
             j++;
         }
-        i++; 
-    }   
+        i++;
+    }    
 }
+
 
 void print(double** arr) {
     int i, j;
     FILE *archivo;
-    archivo = fopen("log.txt", "w+");
+    archivo = fopen("log2.txt", "w+");
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             fprintf(archivo, "array[%d][%d] = %f\n", i, j, arr[i][j]);
 }
 
+
 int main(void)
 {
+    int i = 0;
     double **arr;
     int kern[3][3] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
 
