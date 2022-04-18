@@ -26,11 +26,17 @@ double **alloc_matrix(void) /* Allocate the array */
 }
 
 void fill(double** arr) {
-    int i, j; 
+    int i = 0, j; 
     srand((unsigned)time(NULL));
-    for(i = 0 ; i < XDIM ; i++)
-        for(j = 0 ; j < YDIM ; j++)
+
+    while(i < XDIM){
+        j = 0;
+        while(j < YDIM){
             arr[i][j] = (double)(rand() % 100);
+            j++;
+        }
+        i++;
+    }
 }
 
 void compute(double** arr, int kern[3][3]){
@@ -65,13 +71,18 @@ void compute(double** arr, int kern[3][3]){
 }
 
 void print(double** arr) {
-    int i, j;
+    int i = 0, j;
     FILE *archivo;
     archivo = fopen("log2.txt", "w+");
-    for(i = 0 ; i < XDIM ; i++)
-        for(j = 0 ; j < YDIM ; j++){
+    while(i < XDIM){
+        j = 0;
+        while(j < YDIM){
             fprintf(archivo, "array[%d][%d] = %f\t", i, j, arr[i][j]);
+            j++;
         }
+        i++;
+    }
+    fclose(archivo);
 }
 
 int main(void)
@@ -84,5 +95,6 @@ int main(void)
     compute(arr, kern);
     print(arr);
 
+    free(arr);
     return 0;
 }

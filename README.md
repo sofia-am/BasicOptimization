@@ -70,8 +70,20 @@ for(k = 0; k < 3; k++)
 ```
 ya que se podía incluir dentro de otro ciclo que recorría el arreglo `tmp_sum`.
 
-## Con la segunda optimización se logró una reducción del tiempo de ejecución de un: **59,23%** 
+Con esta optimización se logró una reducción del: **59,23%** 
 
+### Ultima Iteración:
+Se eliminaron algunos ciclos for de las funciones `print` y `fill`.
+```
+Each sample counts as 0.01 seconds.
+  %   cumulative   self              self     total           
+ time   seconds   seconds    calls   s/call   s/call  name    
+ 84.36      7.11     7.11        1     7.11     7.11  compute
+  8.13      7.80     0.68        1     0.68     0.68  fill
+  8.01      8.47     0.67        1     0.67     0.67  print
+  0.00      8.47     0.00        1     0.00     0.00  alloc_matrix
+```
+## El tiempo de ejecución se redujo en un total de: 62,05%
 
 Cabe destacar que hubieron más de 3 iteraciones, pero con pocos cambios significativos. 
 
