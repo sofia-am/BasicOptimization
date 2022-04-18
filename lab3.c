@@ -4,7 +4,6 @@
 #include <math.h>
 #include <time.h>
 
-
 int XDIM = 10000;
 int YDIM = 10000;
 
@@ -12,15 +11,16 @@ int YDIM = 10000;
 double **alloc_matrix(void) /* Allocate the array */
 {
     /* Check if allocation succeeded. (check for NULL pointer) */
-    int i, j, k; 
+    int i; 
     double **array;
-    array = malloc(XDIM*sizeof(double *));
+    array = calloc(XDIM*sizeof(double *), sizeof(double));
     for(i = 0 ; i < XDIM ; i++)
-        array[i] = malloc(YDIM*sizeof(double) );
-  
+        array[i] = calloc(YDIM*sizeof(double), sizeof(double));
+/*
     for(j=0; j<XDIM; j++)
         for(k=0; k<YDIM; k++)
             memset(&array[k][j], j, sizeof(double));
+*/
     return array;
 }
 
@@ -42,8 +42,7 @@ void compute(double** arr, int kern[3][3]){
         j = 1;
         while(j < YDIM-1){
             //printf("processing: %d - %d \n", i, j);
-            k = l = 0;
-            accum = 0;
+            k = l = accum = 0;
             while(k < 3){
                 l = 0;
                 while(l < 3){
