@@ -3,6 +3,7 @@
 #include <string.h>
 #include <math.h>
 #include <time.h>
+#include <unistd.h>
 
 int XDIM = 10000;
 int YDIM = 10000;
@@ -13,9 +14,9 @@ double **alloc_matrix(void) /* Allocate the array */
     /* Check if allocation succeeded. (check for NULL pointer) */
     int i; 
     double **array;
-    array = calloc(XDIM*sizeof(double *), sizeof(double));
+    array = calloc((size_t)((unsigned long)XDIM*sizeof(double *)), sizeof(double));
     for(i = 0 ; i < XDIM ; i++)
-        array[i] = calloc(YDIM*sizeof(double), sizeof(double));
+        array[i] = calloc((size_t)((unsigned long)YDIM*(int)sizeof(double)), sizeof(double));
 /*
     for(j=0; j<XDIM; j++)
         for(k=0; k<YDIM; k++)
@@ -26,7 +27,7 @@ double **alloc_matrix(void) /* Allocate the array */
 
 void fill(double** arr) {
     int i, j; 
-    srand(time(NULL));
+    srand((unsigned)time(NULL));
     for(i = 0 ; i < XDIM ; i++)
         for(j = 0 ; j < YDIM ; j++)
             arr[i][j] = (double)(rand() % 100);
@@ -42,7 +43,8 @@ void compute(double** arr, int kern[3][3]){
         j = 1;
         while(j < YDIM-1){
             //printf("processing: %d - %d \n", i, j);
-            k = l = accum = 0;
+            k = l = 0;
+            accum = 0;
             while(k < 3){
                 l = 0;
                 while(l < 3){
@@ -67,14 +69,15 @@ void print(double** arr) {
     FILE *archivo;
     archivo = fopen("log2.txt", "w+");
     for(i = 0 ; i < XDIM ; i++)
-        for(j = 0 ; j < YDIM ; j++)
-            fprintf(archivo, "array[%d][%d] = %f\n", i, j, arr[i][j]);
+        for(j = 0 ; j < YDIM ; j++){
+            fprintf(archivo, "array[%d][%d] = %f\t", i, j, arr[i][j]);
+        }
 }
 
 int main(void)
 {
     double **arr;
-    int kern[3][3] = {0, -1, 0, -1, 5, -1, 0, -1, 0};
+    int kern[3][3] = {{0, -1, 0},{-1, 5, -1},{ 0, -1, 0}};
 
     arr = alloc_matrix();
     fill(arr);
