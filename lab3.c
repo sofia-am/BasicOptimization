@@ -24,7 +24,6 @@ double **alloc_matrix(void) /* Allocate the array */
     return array;
 }
 
-
 void fill(double** arr) {
     int i, j; 
     srand(time(NULL));
@@ -36,30 +35,33 @@ void fill(double** arr) {
 void compute(double** arr, int kern[3][3]){
     double tmp_sum[9];
     double dato, accum;
-    int i = 0, j, k, l;
+    int i = 1, j, k, l;
     double num = 0.002;
-    while(i < XDIM){
-        j = 0;
-        while(j < YDIM){
+    arr[0][0] = 0;
+    while(i < XDIM-1){
+        j = 1;
+        while(j < YDIM-1){
             //printf("processing: %d - %d \n", i, j);
-            if(i >= 1 && j >=1 && i < XDIM-1 && j <YDIM-1){
-                accum = 0;
-                for(k = 0; k < 3; k++)
-                    for(l = 0; l < 3; l++){
-                        int x = i + (l-1);
-                        int y = j + (k-1);
-                        dato = arr[x][y];
-                        tmp_sum[l*3+k] = (2*kern[l][k]*dato)*num + 1;
-                        accum = accum + tmp_sum[l*3+k];
-                    }                      
-            }
+            k = l = 0;
+            accum = 0;
+            while(k < 3){
+                l = 0;
+                while(l < 3){
+                    int x = i + (l-1);
+                    int y = j + (k-1);
+                    dato = arr[x][y];
+                    tmp_sum[l*3+k] = (2*kern[l][k]*dato)*num + 1;
+                    accum = accum + tmp_sum[l*3+k];
+                    l++;
+                }       
+                k++;
+            }               
             arr[i][j] = accum;
             j++;
         }
         i++;
     }    
 }
-
 
 void print(double** arr) {
     int i, j;
@@ -69,7 +71,6 @@ void print(double** arr) {
         for(j = 0 ; j < YDIM ; j++)
             fprintf(archivo, "array[%d][%d] = %f\n", i, j, arr[i][j]);
 }
-
 
 int main(void)
 {
