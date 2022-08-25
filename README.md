@@ -1,5 +1,5 @@
 # Laboratorio III: Optimización
-### Estudiante:   Amallo, Sofía - 41279731
+### Estudiante:   Amallo, Sofía 
 
 En el script **exe.sh** se encuentran los comandos para compilar, ejecutar y escribir en una archivo los resultados de gprof.
 ```
